@@ -1,0 +1,93 @@
+name: next-release-pull-request
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+          git fetch origin main
+      - name: Git config
+        run: |
+          git config --local user.email "imakenfever@gmail.com"
+          git config --local user.name "actions"
+      - name: Create local changes
+        run: |
+          CURRENT_VERSION=$(echo $GITHUB_REF | sed 's/refs\/tags\///')
+          echo "CURRENT_VERSION = $CURRENT_VERSION"
+          echo "CURRENT_VERSION=$(echo $CURRENT_VERSION)" >> $GITHUB_ENV
+          NEXT_VERSION=$(echo $CURRENT_VERSION | perl -ne 'if ($_ =~ /^v(\d+)\.(\d+)\.(\d+)$/) { $v = $3; $v++; print "v$1.$2.$v\n" } else { print "Invalid tag format."; exit 1 }')
+          echo "NEXT_VERSION = $NEXT_VERSION"
+          echo "NEXT_VERSION=$(echo $NEXT_VERSION)" >> $GITHUB_ENV
+
+      - name: Empty commit
+        run: |
+          git checkout main
+          git commit --allow-empty -m "Empty commit for $NEXT_VERSION"
+
+      - name: Create a pull request with a next release branch
+        id: cpr
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: feature/release-${{ env.NEXT_VERSION }}
+          base: main
+          title: "Release ${{ env.NEXT_VERSION }}"
+          draft: true
+          body: |
+            ## Pull-requests in this release
+
+      - name: Slack Notification on success
+        if: success()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              text: "`feature/release-${{ env.NEXT_VERSION }}` was created. This is a release branch for next release.",
+              attachments: [{
+                "color": "good",
+                "fields": [
+                  {
+                    title: "Published Release",
+                    "value": "https://github.com/${{ github.repository }}/releases/tag/${{ env.NEXT_VERSION }}",
+                    short: false
+                  },
+                  {
+                    title: "Next Release Pull Request",
+                    value: "https://github.com/${{ github.repository }}/pull/${{ steps.cpr.outputs.pull-request-number }}",
+                    short: false
+                  }
+                ]
+              }]
+            }
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      - name: Slack Notification on failure
+        if: failure()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              "text": "Failed to create `feature/release-${{ env.NEXT_VERSION }}` branch. Maybe the branch already exists.",
+              "attachments": [{
+                "color": "warning",
+                "fields": [
+                  {
+                    "title": "Branch URL",
+                    "value": "https://github.com/${{ github.repository }}/tree/feature/release-${{ env.NEXT_VERSION }}",
+                    "short": false
+                  }
+                ]
+              }]
+            }
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

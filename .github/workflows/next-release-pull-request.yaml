@@ -41,6 +41,7 @@ jobs:
           draft: true
           body: |
             ## Pull-requests in this release
+            ## リリース内容
 
       - name: Slack Notification on success
         if: success()
@@ -55,7 +56,7 @@ jobs:
                 "fields": [
                   {
                     title: "Published Release",
-                    "value": "https://github.com/${{ github.repository }}/releases/tag/${{ env.NEXT_VERSION }}",
+                    "value": "https://github.com/${{ github.repository }}/releases/tag/${{ env.CURRENT_VERSION }}",
                     short: false
                   },
                   {

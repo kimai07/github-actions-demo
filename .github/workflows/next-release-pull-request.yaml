@@ -42,8 +42,6 @@ jobs:
           body: |
             ## Pull-requests in this release
             ## リリース内容
-            aaa
-            - bbbb
 
       - name: Slack Notification on success
         if: success()
@@ -60,11 +58,6 @@ jobs:
                     title: "Published Release",
                     "value": "https://github.com/${{ github.repository }}/releases/tag/${{ env.CURRENT_VERSION }}",
                     short: false
-                  },
-                  {
-                    "title": "Next Release Branch",
-                    "value": "https://github.com/${{ github.repository }}/tree/feature/release-${{ env.NEXT_VERSION }}",
-                    "short": false
                   },
                   {
                     title: "Next Release Pull Request",

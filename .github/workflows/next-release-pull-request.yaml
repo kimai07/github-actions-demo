@@ -12,10 +12,6 @@ jobs:
       - uses: actions/checkout@v3
       - run: |
           git fetch origin main
-      - name: Git config
-        run: |
-          git config --local user.email "imakenfever@gmail.com"
-          git config --local user.name "actions"
       - name: Create local changes
         run: |
           CURRENT_VERSION=$(echo $GITHUB_REF | sed 's/refs\/tags\///')
@@ -46,6 +42,7 @@ jobs:
             - bbbb
             ## リリース内容
             aaa
+            \n
             - [ ] bbb
 
       - name: Slack Notification on success
@@ -63,6 +60,11 @@ jobs:
                     title: "Published Release",
                     "value": "https://github.com/${{ github.repository }}/releases/tag/${{ env.CURRENT_VERSION }}",
                     short: false
+                  },
+                  {
+                    "title": "Next Release Branch",
+                    "value": "https://github.com/${{ github.repository }}/tree/feature/release-${{ env.NEXT_VERSION }}",
+                    "short": false
                   },
                   {
                     title: "Next Release Pull Request",

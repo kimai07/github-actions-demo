@@ -12,6 +12,10 @@ jobs:
       - uses: actions/checkout@v3
       - run: |
           git fetch origin main
+      - name: Git config
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
       - name: Create local changes
         run: |
           CURRENT_VERSION=$(echo $GITHUB_REF | sed 's/refs\/tags\///')

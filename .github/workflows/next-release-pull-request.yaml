@@ -46,7 +46,7 @@ jobs:
             - bbbb
             ## リリース内容
             aaa
-            \n
+            　
             - [ ] bbb
 
       - name: Slack Notification on success

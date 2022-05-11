@@ -14,8 +14,8 @@ jobs:
           git fetch origin main
       - name: Git config
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          git config --local user.email "imakenfever@gmail.com"
+          git config --local user.name "actions"
       - name: Create local changes
         run: |
           CURRENT_VERSION=$(echo $GITHUB_REF | sed 's/refs\/tags\///')

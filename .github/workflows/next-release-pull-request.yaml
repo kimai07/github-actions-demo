@@ -12,10 +12,6 @@ jobs:
       - uses: actions/checkout@v3
       - run: |
           git fetch origin main
-      - name: Git config
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
       - name: Create local changes
         run: |
           CURRENT_VERSION=$(echo $GITHUB_REF | sed 's/refs\/tags\///')
@@ -24,11 +20,6 @@ jobs:
           NEXT_VERSION=$(echo $CURRENT_VERSION | perl -ne 'if ($_ =~ /^v(\d+)\.(\d+)\.(\d+)$/) { $v = $3; $v++; print "v$1.$2.$v\n" } else { print "Invalid tag format."; exit 1 }')
           echo "NEXT_VERSION = $NEXT_VERSION"
           echo "NEXT_VERSION=$(echo $NEXT_VERSION)" >> $GITHUB_ENV
-
-      - name: Empty commit
-        run: |
-          git checkout main
-          git commit --allow-empty -m "Empty commit for $NEXT_VERSION"
 
       - name: Create a pull request with a next release branch
         id: cpr
@@ -46,7 +37,7 @@ jobs:
             - bbbb
             ## リリース内容
             aaa
-            \n
+            　
             - [ ] bbb
 
       - name: Slack Notification on success

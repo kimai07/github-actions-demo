@@ -25,10 +25,12 @@ jobs:
           echo "NEXT_VERSION = $NEXT_VERSION"
           echo "NEXT_VERSION=$(echo $NEXT_VERSION)" >> $GITHUB_ENV
 
-      - name: Empty commit
+      - name: Commit for release
         run: |
           git checkout main
-          git commit --allow-empty -m "Empty commit for $NEXT_VERSION"
+          find . -name '*.txt' | xargs sed -i -e 's/${{ env.CURRENT_VERSION }}/${{ env.NEXT_VERSION }}/'
+          git add version.txt
+          git commit -m "${{ env.NEXT_VERSION }}リリース"
 
       - name: Create a pull request with a next release branch
         id: cpr

@@ -58,7 +58,7 @@ jobs:
           status: custom
           custom_payload: |
             {
-              text: "`feature/release-${{ env.NEXT_VERSION }}` was created. This is a release branch for next release.",
+              text: "Next Release Version is ${{ env.NEXT_VERSION }}.",
               attachments: [{
                 "color": "good",
                 "fields": [

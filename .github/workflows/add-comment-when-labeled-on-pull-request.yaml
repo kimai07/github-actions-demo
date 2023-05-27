@@ -7,8 +7,6 @@ jobs:
   add-comment:
     if: github.event.label.name == 'enhancement'
     runs-on: ubuntu-latest
-    permissions:
-      issues: write
     steps:
       - name: Add comment
         uses: peter-evans/create-or-update-comment@v3
@@ -18,7 +16,5 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
             This issue is available for anyone to work on. **Make sure to reference this issue in your pull request.** :sparkles: Thank you for your contribution! :sparkles:
-            ${{ steps.site-diff.outputs.pr-comment }}
-
             <!-- comment-id:comment_configuration -->
             reactions: eyes

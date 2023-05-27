@@ -13,6 +13,7 @@ jobs:
       - name: Add comment
         uses: peter-evans/create-or-update-comment@v3
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           comment-id: ${{ steps.fc_config.outputs.comment-id }}
           issue-number: ${{ github.event.pull_request.number }}
           body: |

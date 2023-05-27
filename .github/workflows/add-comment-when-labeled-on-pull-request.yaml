@@ -1,0 +1,23 @@
+name: Add comment
+on:
+  pull_request:
+    types:
+      - labeled
+jobs:
+  add-comment:
+    if: github.event.label.name == 'enhancement'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add comment
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          comment-id: ${{ steps.fc_config.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            This issue is available for anyone to work on. **Make sure to reference this issue in your pull request.** :sparkles: Thank you for your contribution! :sparkles:
+            <!-- comment-id:comment_configuration -->
+
+            test
+
+          reactions: eyes
